@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DailyStreak - Ne romps pas la chaîne</title>
+  <link rel="stylesheet" href="sty.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <meta name="theme-color" content="#4F46E5" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+</head>
+<body>
+    <!-- Écran de chargement -->
+    <div id="loading" class="loading">
+        <div class="loading-content">
+            <svg class="loading-icon" viewBox="0 0 100 100">
+                <path d="M50,15 L50,15 C67.673,15 82,29.327 82,47 L82,47 C82,64.673 67.673,79 50,79 L50,79 C32.327,79 18,64.673 18,47 L18,47 C18,29.327 32.327,15 50,15 Z" 
+                      fill="none" stroke="#4F46E5" stroke-width="8"/>
+                <path d="M50,25 L50,40 C50,40 60,40 60,50 C60,60 50,60 50,60" 
+                      fill="none" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+                <path d="M50,85 L50,70" 
+                      fill="none" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <h1>DailyStreak</h1>
+            <p>Préparation...</p>
+        </div>
+    </div>
+
+    <!-- Application principale -->
+    <div id="app" class="app">
+        <!-- En-tête -->
+        <header class="header">
+            <div class="header-left">
+                <div class="date">
+                    <div class="day" id="currentDay">Lundi</div>
+                    <div class="number" id="currentDate">15 Jan</div>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="title">
+                    <svg class="title-icon" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"/>
+                    </svg>
+                    <span>DailyStreak</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="icon-btn stats-btn" onclick="switchScreen('stats')" aria-label="Statistiques">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M10,20H14V4H10V20ZM4,20H8V12H4V20ZM16,9V20H20V9H16Z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Contenu principal -->
+        <main class="main">
+            <!-- Écran d'accueil -->
+            <div id="homeScreen" class="screen active">
+                <!-- Compteur de streak -->
+                <div class="streak-card">
+                    <div class="streak-icon">
+                        <svg viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" fill="#4F46E5" opacity="0.1"/>
+                            <path d="M50,20 L50,50 L70,70" fill="none" stroke="#4F46E5" stroke-width="8" stroke-linecap="round"/>
+                            <circle cx="50" cy="50" r="4" fill="#4F46E5"/>
+                        </svg>
+                    </div>
+                    <div class="streak-info">
+                        <div class="streak-count" id="streakCount">0</div>
+                        <div class="streak-label">jours consécutifs</div>
+                    </div>
+                    <div class="streak-quote">Ne romps pas la chaîne</div>
+                </div>
+
+                <!-- Routine du jour -->
+                <div class="routine-card">
+                    <div class="card-header">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M7,7H17V5H19V19H5V5H7V7Z"/>
+                        </svg>
+                        <h2>Routine du jour</h2>
+                    </div>
+                    <div class="exercises-list" id="exercisesList">
+                        <!-- Les exercices seront ajoutés ici par JavaScript -->
+                    </div>
+                    
+                    <div class="actions">
+                        <button class="btn btn-primary" onclick="validateDay()" id="validateBtn">
+                            <svg class="btn-icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"/>
+                            </svg>
+                            <span>Valider ma journée</span>
+                        </button>
+                        
+                        <button class="btn btn-secondary" onclick="toggleTiredMode()" id="tiredModeBtn">
+                            <svg class="btn-icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M19.5,3.09L20.91,4.5L16.41,9H20V11H13V4H15V7.59L19.5,3.09M20.91,19.5L19.5,20.91L15,16.41V20H13V13H20V15H16.41L20.91,19.5M4.5,3.09L9,7.59V4H11V11H4V9H7.59L3.09,4.5L4.5,3.09M3.09,19.5L7.59,15H4V13H11V20H9V16.41L4.5,20.91L3.09,19.5Z"/>
+                            </svg>
+                            <span>Mode réduit</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mode réduit -->
+                <div class="tired-card hidden" id="tiredCard">
+                    <div class="card-header">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M23,12C23,18.08 18.08,23 12,23C5.92,23 1,18.08 1,12C1,5.92 5.92,1 12,1C18.08,1 23,5.92 23,12Z"/>
+                        </svg>
+                        <h3>Mode Réduit</h3>
+                    </div>
+                    <p>Pas le temps ? Fais juste l'essentiel :</p>
+                    <div class="tired-exercises">
+                        <button class="tired-btn" onclick="completeTired('plank')">
+                            <svg class="tired-icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M20,8H4V6H20M20,18H4V12H20M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/>
+                            </svg>
+                            <div>
+                                <span>Gainage sol</span>
+                                <small>20 secondes</small>
+                            </div>
+                        </button>
+                        <button class="tired-btn" onclick="completeTired('squats')">
+                            <svg class="tired-icon" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M21,6H3V8H21V6M19,10H5V12H19V10M17,14H7V16H17V14M15,18H9V20H15V18Z"/>
+                            </svg>
+                            <div>
+                                <span>Squats légers</span>
+                                <small>5 répétitions</small>
+                            </div>
+                        </button>
+                    </div>
+                    <button class="btn btn-small" onclick="toggleTiredMode()">
+                        <svg viewBox="0 0 24 24" width="16" height="16">
+                            <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                        </svg>
+                        Fermer
+                    </button>
+                </div>
+
+                <!-- Timer -->
+                <div class="timer-card hidden" id="timerCard">
+                    <div class="card-header">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
+                        </svg>
+                        <h3>Timer</h3>
+                    </div>
+                    <div class="timer-display" id="timerDisplay">00:00</div>
+                    <div class="timer-exercise" id="timerExercise">Gainage</div>
+                    <div class="timer-controls">
+                        <button class="timer-btn play" onclick="startTimer()">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M8,5.14V19.14L19,12.14L8,5.14Z"/>
+                            </svg>
+                        </button>
+                        <button class="timer-btn pause" onclick="pauseTimer()">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M14,19H18V5H14M6,19H10V5H6V19Z"/>
+                            </svg>
+                        </button>
+                        <button class="timer-btn reset" onclick="resetTimer()">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="btn btn-small" onclick="hideTimer()">
+                        <svg viewBox="0 0 24 24" width="16" height="16">
+                            <path fill="currentColor" d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/>
+                        </svg>
+                        Fermer timer
+                    </button>
+                </div>
+
+                <!-- Progression -->
+                <div class="progress-card">
+                    <div class="card-header">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z"/>
+                        </svg>
+                        <h3>Ta progression</h3>
+                    </div>
+                    <div class="progress-info">
+                        <div class="progress-text">
+                            Aujourd'hui : <span id="todayProgress">0/4</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    <div class="week-chain" id="weekChain">
+                        <!-- Les jours de la semaine seront ajoutés ici -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Écran statistiques -->
+            <div id="statsScreen" class="screen">
+                <div class="stats-header">
+                    <h2>Statistiques</h2>
+                    <button class="icon-btn" onclick="switchScreen('home')">
+                        <svg viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="currentStreak">0</div>
+                        <div class="stat-label">Streak actuelle</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="bestStreak">0</div>
+                        <div class="stat-label">Record</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M9,10V12H7V10H9M13,10V12H11V10H13M17,10V12H15V10H17M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H6V1H8V3H16V1H18V3H19M19,19V8H5V19H19M9,14V16H7V14H9M13,14V16H11V14H13M17,14V16H15V14H17Z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="totalDays">0</div>
+                        <div class="stat-label">Jours réussis</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22C6.47,22 2,17.5 2,12A10,10 0 0,1 12,2M12.5,7V12.25L17,14.92L16.25,16.15L11,13V7H12.5Z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-value" id="totalTime">0</div>
+                        <div class="stat-label">Minutes</div>
+                    </div>
+                </div>
+
+                <div class="calendar-card">
+                    <div class="card-header">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M9,10V12H7V10H9M13,10V12H11V10H13M17,10V12H15V10H17M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H6V1H8V3H16V1H18V3H19M19,19V8H5V19H19M9,14V16H7V14H9M13,14V16H11V14H13M17,14V16H15V14H17Z"/>
+                        </svg>
+                        <h3>Calendrier</h3>
+                    </div>
+                    <div class="calendar" id="calendar">
+                        <!-- Le calendrier sera généré ici -->
+                    </div>
+                </div>
+
+                <div class="achievements-card">
+                    <div class="card-header">
+                        <svg class="card-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M11,16.5L18,9.5L16.59,8.09L11,13.67L7.91,10.59L6.5,12L11,16.5Z"/>
+                        </svg>
+                        <h3>Succès</h3>
+                    </div>
+                    <div class="achievements" id="achievements">
+                        <!-- Les succès seront affichés ici -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Écran paramètres -->
+            <div id="settingsScreen" class="screen">
+                <div class="settings-header">
+                    <h2>Paramètres</h2>
+                    <button class="icon-btn" onclick="switchScreen('home')">
+                        <svg viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="settings-content">
+                    <div class="setting-group">
+                        <h3>
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M10,21H14A2,2 0 0,1 12,23A2,2 0 0,1 10,21M21,19V20H3V19L5,17V11C5,7.9 7.03,5.17 10,4.29C10,4.19 10,4.1 10,4A2,2 0 0,1 12,2A2,2 0 0,1 14,4C14,4.1 14,4.19 14,4.29C16.97,5.17 19,7.9 19,11V17L21,19M17,11A5,5 0 0,0 12,6A5,5 0 0,0 7,11V18H17V11M19.75,3.19L18.33,4.61C20.04,6.3 21,8.6 21,11H23C23,8.07 21.84,5.25 19.75,3.19M1,11H3C3,8.6 3.96,6.3 5.67,4.61L4.25,3.19C2.16,5.25 1,8.07 1,11Z"/>
+                            </svg>
+                            Notifications
+                        </h3>
+                        <div class="setting">
+                            <label for="reminderTime">Rappel quotidien</label>
+                            <input type="time" id="reminderTime" value="18:00">
+                        </div>
+                        <div class="setting">
+                            <label for="notificationsToggle">Activer les notifications</label>
+                            <label class="switch">
+                                <input type="checkbox" id="notificationsToggle" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+                            </svg>
+                            Niveau
+                        </h3>
+                        <div class="level-selector">
+                            <button class="level-btn active" onclick="setLevel('beginner')">
+                                <span>Débutant</span>
+                                <small>4 exercices</small>
+                            </button>
+                            <button class="level-btn" onclick="setLevel('intermediate')">
+                                <span>Intermédiaire</span>
+                                <small>5 exercices</small>
+                            </button>
+                            <button class="level-btn" onclick="setLevel('advanced')">
+                                <span>Avancé</span>
+                                <small>6 exercices</small>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9M12,4.5C17,4.5 21.27,7.61 23,12C21.27,16.39 17,19.5 12,19.5C7,19.5 2.73,16.39 1,12C2.73,7.61 7,4.5 12,4.5M3.18,12C4.83,15.36 8.24,17.5 12,17.5C15.76,17.5 19.17,15.36 20.82,12C19.17,8.64 15.76,6.5 12,6.5C8.24,6.5 4.83,8.64 3.18,12Z"/>
+                            </svg>
+                            Apparence
+                        </h3>
+                        <div class="theme-selector">
+                            <button class="theme-btn" onclick="setTheme('light')">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor" d="M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,2L14.39,5.42C13.65,5.15 12.84,5 12,5C11.16,5 10.35,5.15 9.61,5.42L12,2M3.34,7L7.5,6.65C6.9,7.16 6.36,7.78 5.94,8.5C5.5,9.24 5.25,10 5.11,10.79L3.34,7M3.36,17L5.12,13.23C5.26,14 5.53,14.78 5.95,15.5C6.37,16.24 6.91,16.86 7.5,17.37L3.36,17M20.65,7L18.88,10.79C18.74,10 18.47,9.23 18.05,8.5C17.63,7.78 17.1,7.15 16.5,6.64L20.65,7M20.64,17L16.5,17.36C17.09,16.85 17.62,16.22 18.04,15.5C18.46,14.77 18.73,14 18.87,13.21L20.64,17M12,22L9.59,18.56C10.33,18.83 11.14,19 12,19C12.82,19 13.63,18.83 14.37,18.56L12,22Z"/>
+                                </svg>
+                                Clair
+                            </button>
+                            <button class="theme-btn active" onclick="setTheme('dark')">
+                                <svg viewBox="0 0 24 24" width="16" height="16">
+                                    <path fill="currentColor" d="M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.64 6.35,17.66C9.37,20.67 14.19,20.78 17.33,17.97Z"/>
+                                </svg>
+                                Sombre
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <h3>
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M12,16A3,3 0 0,1 9,13C9,11.88 9.61,10.9 10.5,10.39L10.5,10.39C10.21,9.97 10,9.5 10,9C10,7.34 11.34,6 13,6C14.66,6 16,7.34 16,9C16,9.5 15.79,9.97 15.5,10.39L15.5,10.39C16.39,10.9 17,11.88 17,13C17,14.66 15.66,16 14,16H12M6,22A2,2 0 0,1 4,20C4,19.62 4.1,19.27 4.29,18.97L6.11,15.81C7.69,17.17 9.75,18 12,18C14.25,18 16.31,17.17 17.89,15.81L19.71,18.97C19.9,19.27 20,19.62 20,20A2,2 0 0,1 18,22H6Z"/>
+                            </svg>
+                            Données
+                        </h3>
+                        <button class="btn btn-secondary" onclick="exportData()">
+                            <svg viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
+                            </svg>
+                            Exporter
+                        </button>
+                        <button class="btn btn-danger" onclick="resetData()">
+                            <svg viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor" d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                            </svg>
+                            Réinitialiser
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Navigation -->
+        <nav class="nav">
+            <button class="nav-btn active" onclick="switchScreen('home')">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/>
+                    </svg>
+                </span>
+                <span class="nav-label">Accueil</span>
+            </button>
+            <button class="nav-btn" onclick="switchScreen('stats')">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M10,20H14V4H10V20ZM4,20H8V12H4V20ZM16,9V20H20V9H16Z"/>
+                    </svg>
+                </span>
+                <span class="nav-label">Stats</span>
+            </button>
+            <button class="nav-btn" onclick="switchScreen('settings')">
+                <span class="nav-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"/>
+                    </svg>
+                </span>
+                <span class="nav-label">Réglages</span>
+            </button>
+        </nav>
+
+        <!-- Messages toast -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="tp1.js"></script>
+</body>
+</html>
